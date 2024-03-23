@@ -29,3 +29,7 @@ At runtime the user will be asked to input their preferred choices for methods a
 In order to compile the main file (which is challenge_jason.cpp), two libraries are necessary: json and muparser. I included the header files "json.hpp" and "muparser.h" that are not in this repository, so the paths in the makefile stored in the variables "CPPFLAGS" and "LDFLAGS" may need to be changed depending on where the libraries are stored. 
 It may also be required to execute the following command if the library is still not found after compiling:
 $export LD_LIBRARY_PATH=path/of/the/directory/of/the/library/you/use:$LD_LIBRARY_PATH
+
+# What you will find
+
+The main function is called minimize, which will call one of three auxiliary functions, depending on the choice the user has input when asked. They will also be asked to choose their preferred strategy for choosing the stepsize and, if so desired, which finite difference method to be used by the program. Other auxiliary functions have been coded with this purpose. 
