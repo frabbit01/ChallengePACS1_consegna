@@ -59,6 +59,8 @@ bool choice_fd(std::function<std::vector<double> (std::function<double (double, 
 //here I define my main function
 std::vector<double> minimize(Parameters const & parameters);
 
+//@note main should be in a separate translation unit!!!
+// You should separate parts that are not related to the main function in separate translation units. This will make your code more modular and easier to read.
 int main(){
     std::ifstream file("data.json");
     json data = json::parse(file);
@@ -85,6 +87,8 @@ int main(){
     std::cout<<x_min[0]<<","<<x_min[1]<<std::endl;
     std::cout<<"The value of the function is: "<<parameters.f(x_min[0],x_min[1])<<std::endl;
 }
+
+//@note These are general utilities that nay be useful olso other times. You should put them in a separate translation unit.
 //euclidian norm
 double norm(std::vector<double> const & vec){
     double sum=0;
@@ -95,6 +99,7 @@ double norm(std::vector<double> const & vec){
 }
 //I define sum and subrtraction between vectors and scalar-vector multiplication
 //In the sum and subtraction functions there is also a check for the vectors dimentions
+//@note using opoerator overloading is a better way to do this, but you didi not know probably
 std::vector<double> sub(std::vector<double> a, std::vector<double> b){
     if(a.size()!=b.size()) {
         std::cerr << "Dimensions are not compatible"<<std::endl;
@@ -289,7 +294,7 @@ std::vector<double> momentum(Parameters const & parameters){
         }
         else{
         for(auto f:parameters.grad)
-            grad.push_back(f(x[0],x[1]));
+            grad.push_back(f(x[0],x[1]));//@note I don't understand what you are doing here.
         }
         d=sub(mul(d,eta),mul(grad,alpha));
         if(norm(sub(x,x_old))<parameters.es)
@@ -355,6 +360,16 @@ bool choice_fd(std::function<std::vector<double> (std::function<double (double, 
     int choice=-1;
     char fd;
     //I ask the user to choose whether or not they want to choose a finite difference method
+    //@note An error here. fd is uninitialised and I am using it in the while loop. This is a major bug. Either you initialize the 
+    // variable or you use a do-while loop to ensure that the user is asked the question at least once.
+    // You should never assume that a char is initialised automatically to something.   
+    // I show the fix in the comment below
+    /*
+    do{
+        std::cout<<"Would you like to use a finite differences method instead of the exact gradient? (y|n)"<<std::endl;
+        std::cin>>fd;
+    }while(fd!='y' &&fd!='n');
+    */
     while(fd!='y' &&fd!='n'){
         std::cout<<"Would you like to use a finite differences method instead of the exact gradient? (y|n)"<<std::endl;
         std::cin>>fd;
